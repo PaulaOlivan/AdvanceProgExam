@@ -8,6 +8,13 @@ public class TimeDisplay {
         hours = h;
         minutes = m;
     }
+
+    public TimeDisplay(String time){
+        String h = time.substring(0, 2);
+        String m = time.substring(3);
+        hours = Integer.parseInt(h);
+        minutes = Integer.parseInt(m);
+    }
     
     public void tickUp() {
         minutes++;
@@ -29,5 +36,24 @@ public class TimeDisplay {
                 hours = 23;
             }
         }
+    }
+
+    @Override
+    public String toString(){
+        String hour;
+        String min;
+        if (hours < 10){
+            hour = "0" + hours;
+        }
+        else{
+            hour = hours + "";
+        }
+        if (minutes < 10){
+            min = "0" + minutes;
+        }
+        else{
+            min = minutes + ""; 
+        }
+        return hour + ":" + min;
     }
 }

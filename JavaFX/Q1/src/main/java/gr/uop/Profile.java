@@ -1,5 +1,7 @@
 package gr.uop;
 
+import java.util.Optional;
+
 public class Profile {
     private String name;
     private TimeDisplay start;
@@ -9,6 +11,14 @@ public class Profile {
 
     public Profile(String name, TimeDisplay start, TimeDisplay stop, double temperature) {
         this.name = name;
+        this.start = start;
+        this.stop = stop;
+        this.temperature = temperature;
+        this.active = false;
+    }
+
+    public Profile(Optional<String> name, TimeDisplay start, TimeDisplay stop, double temperature) {
+        this.name = name.toString();
         this.start = start;
         this.stop = stop;
         this.temperature = temperature;
@@ -53,5 +63,10 @@ public class Profile {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public String toString(){
+        return name + "(" + start.toString() + " - " + stop.toString() + ", " + temperature + ")";
     }
 }
