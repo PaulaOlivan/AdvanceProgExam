@@ -57,6 +57,10 @@ public class Profile {
         this.temperature = temperature;
     }
 
+    public int roundTemperature (double temp){
+        return ((int)temp);
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -67,6 +71,6 @@ public class Profile {
 
     @Override
     public String toString(){
-        return name + "(" + start.toString() + " - " + stop.toString() + ", " + temperature + ")";
+        return name + " (" + start.toString() + " - " + stop.toString() + ", " + ((int)temperature) + ")";
     }
 }

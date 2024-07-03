@@ -39,6 +39,10 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         BorderPane mainPane = new BorderPane();
+        int textWidth = 100;
+        int buttonWidth = textWidth / 2;
+        int sliderWidth = 170;
+        String tempText = "Temperature (";
         
         //Settings Pane
         FlowPane settings = new FlowPane();
@@ -48,9 +52,13 @@ public class App extends Application {
         TimeDisplay defaultStart = new TimeDisplay(10, 00);
         TextField startText = new TextField(defaultStart.toString());
         startText.setAlignment(Pos.CENTER);
+        startText.setMaxWidth(textWidth);
+        startText.setDisable(true);
         HBox startButtonPane = new HBox();
         Button startPlus = new Button("+");
         Button startMinus = new Button("-");
+        startPlus.setPrefWidth(buttonWidth);
+        startMinus.setPrefWidth(buttonWidth);
         startButtonPane.getChildren().addAll(startPlus, startMinus);
         startButtonPane.setAlignment(Pos.CENTER);
         startBox.getChildren().addAll(startLabel, startText, startButtonPane);
@@ -61,9 +69,13 @@ public class App extends Application {
         TimeDisplay defaultStop = new TimeDisplay(11, 00);
         TextField stopText = new TextField(defaultStop.toString());
         stopText.setAlignment(Pos.CENTER);
+        stopText.setMaxWidth(textWidth);
+        stopText.setDisable(true);
         HBox stopButtonPane = new HBox();
         Button stopPlus = new Button("+");
         Button stopMinus = new Button("-");
+        stopPlus.setPrefWidth(buttonWidth);
+        stopMinus.setPrefWidth(buttonWidth);
         stopButtonPane.getChildren().addAll(stopPlus, stopMinus);
         stopButtonPane.setAlignment(Pos.CENTER);
         stopBox.getChildren().addAll(stopLabel, stopText, stopButtonPane);
@@ -71,18 +83,28 @@ public class App extends Application {
 
         VBox temperatureBox = new VBox();
         Slider tempSlider = new Slider(14, 26, 20);
-        double value = tempSlider.getValue();
-        Label tempLabel = new Label("Temperature (" + value + ")");
-        tempSlider.setMajorTickUnit(1);
+        int value = ((int)tempSlider.getValue());
+        Label tempLabel = new Label(tempText + value + ")");
+        tempLabel.setAlignment(Pos.CENTER);
+        tempSlider.setMajorTickUnit(2); // Labels
         tempSlider.setMinorTickCount(1);
+        tempSlider.setBlockIncrement(1);
+        tempSlider.setSnapToTicks(true);
         tempSlider.setShowTickMarks(true);
         tempSlider.setShowTickLabels(true);
+        tempSlider.setPrefWidth(sliderWidth);
         temperatureBox.getChildren().addAll(tempLabel, tempSlider);
         temperatureBox.setAlignment(Pos.CENTER);
         Button saveAs = new Button("Save as...");
 
         settings.getChildren().addAll(startBox, stopBox, temperatureBox, saveAs);
         settings.setAlignment(Pos.TOP_CENTER);
+        int marginElements = 20;
+        int marginBorder = 20;
+        settings.setMargin(startBox, new Insets(marginBorder, marginElements, marginElements, marginBorder));
+        settings.setMargin(stopBox, new Insets(marginBorder, marginElements, marginElements, marginElements));
+        settings.setMargin(temperatureBox, new Insets(marginBorder, marginElements, marginElements, marginElements));
+        settings.setMargin(saveAs, new Insets(marginBorder, marginBorder, marginBorder, marginBorder));
 
         //Profiles Pane
         FlowPane profiles = new FlowPane();
@@ -99,18 +121,28 @@ public class App extends Application {
         int distanceBorder = 20; 
         profiles.setMargin(comboProfile, new Insets(distanceBorder, distanceElements, distanceVertically, distanceBorder));
         profiles.setMargin(activate, new Insets(distanceBorder, distanceElements, distanceVertically, distanceElements));
-        profiles.setMargin(deactivate, new Insets(distanceBorder, distanceElements, distanceVertically, distanceElements));
-        profiles.setMargin(delete, new Insets(distanceBorder, distanceBorder, distanceVertically, distanceElements));
-        comboProfile.setMinWidth(100);
-        comboProfile.setMaxWidth(100);
+        profiles.setMargin(deactivate, new Insets(distanceBorder, distanceElements, distanceBorder, distanceElements));
+        profiles.setMargin(delete, new Insets(distanceBorder, distanceBorder, distanceBorder, distanceElements));
+        comboProfile.setMinWidth(textWidth+20);
+        comboProfile.setMaxWidth(textWidth+20);
+        comboProfile.setMinHeight(comboProfile.getPrefHeight());
+        comboProfile.setMaxHeight(comboProfile.getPrefHeight());
+        activate.setMaxSize(activate.getPrefWidth(), activate.getPrefHeight());
+        activate.setMinSize(activate.getPrefWidth(), activate.getPrefHeight());
+        deactivate.setMaxSize(deactivate.getPrefWidth(), deactivate.getPrefHeight());
+        deactivate.setMinSize(deactivate.getPrefWidth(), deactivate.getPrefHeight());
+        delete.setMaxSize(delete.getPrefWidth(), delete.getPrefHeight());
+        delete.setMinSize(delete.getPrefWidth(), delete.getPrefHeight());
 
         // Tabs for the controller
         TabPane tabsPane = new TabPane();
         Tab tab1 = new Tab("Settings", settings);
+        tab1.setClosable(false);
         Tab tab2 = new Tab("Profiles"  , profiles);
+        tab2.setClosable(false);
         tabsPane.getTabs().add(tab1);
         tabsPane.getTabs().add(tab2);
-
+        
         //File Menu
         MenuItem MenuSettings = new MenuItem("Settings");
         MenuItem MenuProfile = new MenuItem("Profile");
@@ -136,6 +168,23 @@ public class App extends Application {
         stage.show();
 
         /* Functionality of the Window */
+
+        // Function to show Settings tab when the File -> Settings is click
+        MenuSettings.setOnAction(e -> {
+            tabsPane.getSelectionModel().select(tab1);
+        });
+
+        //Function to show Profiles tab when the File -> Profile is click
+        MenuProfile.setOnAction(e -> {
+            tabsPane.getSelectionModel().select(tab2);
+        });
+
+        // Function to close the Controller if the user press File -> Exit
+        MenuExit.setOnAction(e -> {
+            stage.close();
+        });
+
+
         // Function to augment the time on the start section
         startPlus.setOnAction(e -> {
             String previousTime = startText.getText().trim();
@@ -166,6 +215,24 @@ public class App extends Application {
             TimeDisplay time = new TimeDisplay(previousTime);
             time.tickDown();
             stopText.setText(time.toString());
+        });
+
+        // Function to modify the Temperature Label (when you click somewhere in the slider)
+        tempSlider.setOnMouseClicked(e -> {
+            int temp = ((int)tempSlider.getValue());
+            tempLabel.setText(tempText + temp + ")");
+        });
+
+        // Function to modify the Temperature Label (when you change temperature with arrows)
+        tempSlider.setOnKeyPressed(e -> {
+            int temp = ((int)tempSlider.getValue());
+            tempLabel.setText(tempText + temp + ")");
+        });
+
+        //Function to modify the Temperature Label (when you drag the mouse)
+        tempSlider.setOnMouseDragged(e -> {
+            int temp = ((int)tempSlider.getValue());
+            tempLabel.setText(tempText + temp + ")");
         });
 
         // Function to display the TextInputDialog to save a new profile
@@ -217,6 +284,7 @@ public class App extends Application {
             selectedProfile.setActive(true); // Change active to true to active the profile
             activate.setDisable(true); // Change the availability of each button
             deactivate.setDisable(false);
+            System.out.println("Profile:" + selectedProfile + "has change active to " + selectedProfile.isActive());
         });
 
         // Function to desactivate a profile selected from the combobox
@@ -225,6 +293,7 @@ public class App extends Application {
             selectedProfile.setActive(false); // Change active to false to deactivate the profile
             activate.setDisable(false);
             deactivate.setDisable(true);
+            System.out.println("Profile:" + selectedProfile + "has change active to " + selectedProfile.isActive());
         });
 
         // Function to delete a profile selected from the combobox
@@ -276,8 +345,6 @@ public class App extends Application {
                 }
             }
         }); 
-
-
     }
 
     public static void main(String[] args) {
