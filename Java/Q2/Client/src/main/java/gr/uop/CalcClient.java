@@ -23,6 +23,7 @@ public class CalcClient {
             System.out.print("First of all write the initial number for the operations: ");
             Scanner keyboard = new Scanner(System.in);
             String initialNum = keyboard.nextLine();
+
             while (!isANumber(initialNum)){
                 System.out.print("You must introduce a number, please try again: ");
                 keyboard = new Scanner(System.in);
@@ -52,6 +53,7 @@ public class CalcClient {
             // operation == 5 -> = we go out of the while loop
             String result = fromServer.nextLine();
             System.out.println("The final result is: " + result);
+            System.out.println("The operation has finished, closing the communication with the server");
         }
         catch (UnknownHostException e) {
             System.out.println("Unknown host");

@@ -21,49 +21,53 @@ public class CalcServer {
             // Read the first number send by the client and don't responde
             int result = fromClient.nextInt(); 
             System.out.println("First number receiver = " + result);
-            
-            do {
-                int operation = fromClient.nextInt(); // Read the operation to compute
+
+            int operation = fromClient.nextInt(); // Read the operation to compute
+            System.out.println("Operation received = " + operation);
+
+            while (operation != 5) {
+                // Its an arithmetical sign so we read the next entry, the second number
+                int number = fromClient.nextInt();
+                System.out.println("Second number received = " + number);
+                switch (operation) {
+                    case 1: // Addition
+                        result = result + number;
+                        System.out.println("Temporal result = " + result);
+                        toClient.println(result);
+                        break;
+
+                    case 2: // Subtraction
+                        result = result - number;
+                        System.out.println("Temporal result = " + result);
+                        toClient.println(result);
+                        break;
+
+                    case 3: // Multiplication
+                        result = result * number;
+                        System.out.println("Temporal result = " + result);
+                        toClient.println(result);
+                        break;
+
+                    case 4: // Division
+                        result = result / number;
+                        System.out.println("Temporal result = " + result);
+                        toClient.println(result);
+                        break;
+
+                    default:
+                        System.err.println("Error on the operation received");
+                        break;
+                }
+
+                // We read the next operation sended by the client
+                operation = fromClient.nextInt(); // Read the operation to compute
                 System.out.println("Operation received = " + operation);
-                if (operation != 5){
-                    // Its an arithmetical sign so we read the next entry, the second number
-                    int number = fromClient.nextInt();
-                    System.out.println("Second number received = " + number);
-                    switch (operation) {
-                        case 1: // Addition
-                            result = result + number;
-                            System.out.println("Temporal result = " + result);
-                            toClient.println(result);
-                            break;
+            }
 
-                        case 2: // Subtraction
-                            result = result - number;
-                            System.out.println("Temporal result = " + result);
-                            toClient.println(result);
-                            break;
-
-                        case 3: // Multiplication
-                            result = result * number;
-                            System.out.println("Temporal result = " + result);
-                            toClient.println(result);
-                            break;
-
-                        case 4: // Division
-                            result = result / number;
-                            System.out.println("Temporal result = " + result);
-                            toClient.println(result);
-                            break;
-
-                        default:
-                            System.err.println("Error on the operation received");
-                            break;
-                    }
-                }
-                else{ // The sign sended is a = so we just need to return result
-                    System.out.println("Final result = " + result);
-                    toClient.println(result);
-                }
-            } while (fromClient.hasNextLine());
+            // The sign received is a = so we just need to return result
+            System.out.println("Final result = " + result);
+            toClient.println(result);
+            System.out.println ("The communication has finished closing the server...");
         }
         catch (IOException e) {
             System.out.println(e);
