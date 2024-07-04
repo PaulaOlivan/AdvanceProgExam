@@ -1,8 +1,11 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeSet;
 
 public class PhoneBook {
+    //private ArrayList<Person> entries;
     private TreeSet<Person> entries;
     
     // On the question 1.h we need to print the PhoneBook entries in alphabetical
@@ -17,7 +20,7 @@ public class PhoneBook {
     public PhoneBook()
     {
         entries = new TreeSet<>(new Person.PersonComparator());
-        //entries = new ArrayList<>(new Person.PersonComparator());
+        //entries = new ArrayList<>();
         phoneTypes.add("mobile");
         phoneTypes.add("home");
         phoneTypes.add("work");
@@ -39,6 +42,7 @@ public class PhoneBook {
     public void printPhoneBookAlpha()
     {
         int i = 1;
+        //Arrays.sort(entries, new Person.PersonComparator());
         for (Person p : entries){
             System.out.println(i + ". " + p);
             i++;
@@ -61,6 +65,7 @@ public class PhoneBook {
         }
         else{
             int index = 0;
+            //Arrays.sort(entries, new Person.PersonComparator());
             for (Person p : entries){
                 if (index == i){
                     return p;

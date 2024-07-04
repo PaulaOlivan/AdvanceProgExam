@@ -27,6 +27,7 @@ public class Main
         Person p2 = new Person ("Cruz", "Penelope");
         Person p3 = new Person("Segura", "Santiago");
         Person p4 = new Person ("Cruz", "Monica");
+        Person p5 = new Person ("Banderas", "Antonio");
         
         p1.addPhone("123456789", "mobile");
         p1.addPhone("987654321", "other");
@@ -46,6 +47,7 @@ public class Main
         contacts.addPerson(p1);
         contacts.addPerson(p3);
         contacts.addPerson(p2);
+        contacts.addPerson(p5); //Its not added because it already exist in the PhoneBook
 
         System.out.println("\nPrinting the Phone Book in alphabetic way");
         contacts.printPhoneBookAlpha();
