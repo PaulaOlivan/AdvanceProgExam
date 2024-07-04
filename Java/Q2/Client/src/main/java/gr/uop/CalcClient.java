@@ -33,7 +33,7 @@ public class CalcClient {
             String operation = printMenu(keyboard);
             toServer.println(operation); // Send the operation, the server won't response
 
-            while (operation != "5"){
+            while (!operation.equals("5")){
                 System.out.print("Write the next number to calculate the selected operation: ");
                 String secondNum = keyboard.nextLine();
                 while (!isANumber(secondNum)){
@@ -44,14 +44,14 @@ public class CalcClient {
                 // The second number can be read as a number on the server buffer
                 toServer.println(secondNum);
                 String result = fromServer.nextLine();
-                System.out.println(result);
+                System.out.println("The result until now is: " + result);
 
                 operation = printMenu(keyboard);
                 toServer.println(operation);
             }
             // operation == 5 -> = we go out of the while loop
             String result = fromServer.nextLine();
-            System.out.println(result);
+            System.out.println("The final result is: " + result);
         }
         catch (UnknownHostException e) {
             System.out.println("Unknown host");
@@ -72,7 +72,7 @@ public class CalcClient {
         String operation = keyboard.nextLine();
         while (!validOperation(operation)){
             System.out.println("The inserted number does not correspond to any operation");
-            printMenu(keyboard);
+            operation = printMenu(keyboard);
         }
         return operation; // We are sure that the operation is a number so we can cast it
     }
